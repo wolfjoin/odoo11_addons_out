@@ -17,13 +17,14 @@ class ProductProductAdd(models.Model):
     _inherit = 'product.product'
 
     barcode = fields.Char(
-        'Barcode', copy=False, oldname='ean13',
+        'Barcode', copy=False, oldname='ean13',default='New',
         help="International Article Number used for product identification.")
 
 
     @api.model
     def create(self, vals):
-        vals['barcode'] = self.env['ir.sequence'].next_by_code('product.product.barcode')
+        if vals.get('barcode', 'New') == 'New':
+            vals['barcode'] = self.env['ir.sequence'].next_by_code('product.product.barcode')
         return super(ProductProductAdd, self).create(vals)
 
 class product_vendor_pricelist(models.Model):
